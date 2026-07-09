@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 gh_publish.py - GitHub Publish/Update Automation for Codex Skills
 ===============================================================

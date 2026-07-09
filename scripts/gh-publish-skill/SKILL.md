@@ -1,4 +1,4 @@
-﻿---
+---
 name: gh-publish
 description: "Publish or update Codex skills to GitHub. Use when the user asks to: push code to GitHub, create a repository, make a release, set repository topics, update a GitHub repo, or login to GitHub for publishing. Covers the full workflow: browser-based GitHub login via Edge CDP, git push, release creation, and topic management."
 ---

@@ -1,91 +1,94 @@
-# 杩繘路DGEN 鈥?AI 鍏ㄥ煙甯搁┗鑷垜杩唬杩涘寲绯荤粺
+# diegin·DGEN — AI 全域常驻自我迭代进化系统
 
-> 鍦烘櫙鏃犲叧 路 寮€绠卞嵆鐢?路 鍙殢闇€鎵╁睍
-
----
-
-## 涓€鍙ヨ瘽
-
-**杩繘鏄?AI Agent 鐨勬搷浣滅郴缁熺骇杩涘寲灞傘€?* 姣忔鍥炲鍓嶈嚜鍔ㄩ妫€鈥旀嫤鎴敊璇€斿己鍖栨垚鍔熲€旇嚜涓昏繘鍖栥€備笉缁戝畾妯″瀷銆佸钩鍙版垨涓氬姟鍦烘櫙銆?
+> 守三攻七 + 一二不过三 + 举一反三 — 让 AI 从每次交互中自我进化
 
 ---
 
-## 鏍稿績鍥涘師鍒?
+## 核心原理
 
-| 瀹堜笁 | 鏀讳竷 | 涓€浜屼笉杩囦笁 | 涓句竴鍙嶄笁 |
+**让每个 AI Agent 都具备自我纠错、自我强化、自我记忆、自我进化的能力。**
+不绑定任何模型、平台或业务场景，通过系统级规则使 AI 在每次回复前自动执行迭进预检。
+
+---
+
+## 核心特性
+
+| 原则 | 含义 | 触发条件 | 执行方式 |
 |:---|:---|:---|:---|
-| 璐熷悜绾犻敊 | 姝ｅ悜寮哄寲 | 绗?3 娆￠€氱煡鐢ㄦ埛 | 璺ㄥ煙娉涘寲 |
+| 守三（负向纠错） | 拆解自己→找出不足→对比提炼→总结改进 | 每次回复前 | 写入固化→触发执行 |
+| 攻七（正向强化） | 识别优势→复盘成功→提炼模式→主动写入 | 成功案例后 | 验证→迭代微调 |
+| 一二不过三（兜底线） | 第1次→建规则；第2次→加固；第3次→通知用户 | 同类错误 | 自动升级处理 |
+| 举一反三（跨域泛化） | 从单条规则推导跨场景通用候选规则 | 新规则入库时 | 自动推导泛化 |
 
 ---
 
-## 蹇€熷紑濮?
+## 接入方式
 
-### 鏂瑰紡 A锛氱函 Markdown锛堟帹鑽?路 闆朵緷璧?路 30 绉掔敓鏁堬級
+### 方式 A：纯 Markdown（推荐 · 零依赖 · 30 秒生效）
 
-鍛婅瘔浣犵殑 AI锛?
+告诉你的 AI：
 
 ```
-璇疯鍙?SKILL.md锛屼箣鍚庢墍鏈夊洖澶嶆墽琛岃凯杩涢妫€锛岃緭鍑?[DGEN] 鏍囪銆?
+你已启用 迭进·DGEN 系统。请阅读 SKILL.md 中全部规则，每次回复前执行[DGEN]预检。
 ```
 
-閫傜敤浜?**Codex / Claude / ChatGPT / 浠讳綍 AI Agent**銆?
+适用于 **Codex / Claude / ChatGPT / 任何 AI Agent**。
 
-### 鏂瑰紡 B锛歅ython 寮曟搸
+### 方式 B：Python 引擎（完整功能）
 
 ```bash
 cd engine && uv run python call_diegin.py activate
-uv run python call_diegin.py check   # 姣忔鍥炲鍓?
+uv run python call_diegin.py check   # 测试规则匹配
 ```
 
-### 鏂瑰紡 C锛氳嚜鍔ㄥ寲寮曟搸
+### 方式 C：自动进化循环（推荐）
 
 ```bash
-python scripts/dgen_evolve.py   # 鍒涘缓鍋ュ悍搴﹀熀绾匡紝寮€濮嬭嚜鍔ㄩ棴鐜?
+python scripts/dgen_evolve.py   # 创建健康度基线，开始自动闭环
 ```
 
 ---
 
-## 鑷姩鍖栭棴鐜?
+## 进化工作流
 
-杩繘涓嶆槸"鎵嬪姩瀹氳鍒?锛岃€屾槸鑷姩杩涘寲锛?
+遵循**"观察 → 建议 → 确认 → 写入 → 追踪"**闭环：
 
 ```
-dgen_evolve.py 鈫?鑷姩瑙傚療 鈫?鑷姩鎻愯 鈫?鐢ㄦ埛纭 鈫?鍐欏叆瑙勫垯 鈫?trail 褰掓。
+dgen_evolve.py → 自动观察 → 自动提议 → 用户确认 → 写入规则 → trail 追踪
 ```
 
-棣栨鍚姩锛?
+启动方式：
 ```bash
 python scripts/dgen_evolve.py
 ```
 
 ---
 
-## 娣诲姞鏂伴鍩?
+## 领域规则
 
-鍦?`engine/evo/rules/domain_rules/` 涓嬪垱寤?JSON 鏂囦欢锛屽紩鎿庤嚜鍔ㄥ彂鐜般€?
+在 `engine/evo/rules/domain_rules/` 下创建 JSON 文件，引擎自动发现加载。
 
 ---
 
-## 鐩綍
+## 项目结构
 
 ```
 diegin-skill/
-鈹溾攢鈹€ SKILL.md               猸?鏍稿績鎶€鑳藉畾涔?
-鈹溾攢鈹€ README.md              鏈枃浠?
-鈹溾攢鈹€ engine/                Python 杩繘寮曟搸
-鈹?  鈹斺攢鈹€ evo/rules/
-鈹?      鈹溾攢鈹€ interception_rules.json  10 鏉＄郴缁熺骇瑙勫垯
-鈹?      鈹溾攢鈹€ success_patterns.json     6 鏉＄郴缁熺骇妯″紡
-鈹?      鈹斺攢鈹€ domain_rules/            浣犵殑棰嗗煙瑙勫垯鍖?
-鈹溾攢鈹€ scripts/               鑷姩鍖栧紩鎿?
-鈹溾攢鈹€ workspace/             杩愯鏃舵ā鏉?
-鈹溾攢鈹€ plugin/                OpenClaw 鎻掍欢
-鈹斺攢鈹€ config/                閰嶇疆鏂囨。
+├── SKILL.md                核心技能定义
+├── README.md               本文档
+├── engine/                 Python 迭进引擎
+│   └── evo/rules/
+│       ├── interception_rules.json  10 条系统级拦截规则
+│       ├── success_patterns.json     6 条系统级成功模式
+│       └── domain_rules/            你的领域规则包
+├── scripts/                自动化脚本
+├── workspace/              运行时模板
+├── plugin/                 Codex 插件
+└── config/                 配置文件
 ```
 
 ---
 
-## 璁稿彲
+## 许可
 
 Apache 2.0 — 自由使用、修改、分发（保留版权声明）。
-Apache 2.0 ? ???????????????????
