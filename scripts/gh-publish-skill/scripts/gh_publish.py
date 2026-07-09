@@ -340,6 +340,83 @@ def cmd_login():
     finally:
         cdp.close()
 
+
+def cmd_audit(repo_dir):
+    """Audit repo directory for encoding, BOM, garbled text issues."""
+    issues = []
+    ok = 0
+    skipped = 0
+
+    for root, dirs, files in os.walk(repo_dir):
+        # Skip .git and hidden dirs
+        dirs[:] = [d for d in dirs if not d.startswith('.') and d != '__pycache__']
+        for f in sorted(files):
+            path = os.path.join(root, f)
+            rel = os.path.relpath(path, repo_dir)
+            
+            # Skip binary/familiar
+            ext = os.path.splitext(f)[1].lower()
+            if ext in ['.pyc', '.exe', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg', '.woff', '.woff2', '.ttf', '.eot']:
+                skipped += 1
+                continue
+            if f.startswith('.'):
+                skipped += 1
+                continue
+            
+            with open(path, 'rb') as fh:
+                raw = fh.read()
+            
+            # 1. UTF-8 validity
+            try:
+                text = raw.decode('utf-8')
+            except UnicodeDecodeError:
+                issues.append((rel, 'INVALID_UTF8', 'File is not valid UTF-8'))
+                continue
+            
+            # 2. BOM check
+            if raw[:3] == b'\xef\xbb\xbf':
+                issues.append((rel, 'BOM', 'Has UTF-8 BOM'))
+                continue
+            
+            # 3. Replacement chars
+            if '\ufffd' in text:
+                issues.append((rel, 'REPLACEMENT', f'Has {text.count(chr(0xfffd))} replacement characters'))
+                continue
+            
+            # 4. Garbled text (excessive ? in short lines)
+            lines = text.split('\n')
+            for i, line in enumerate(lines):
+                s = line.strip()
+                if not s or len(s) > 120:
+                    continue
+                if s.count('?') > 3:
+                    issues.append((rel, 'GARBLED', f'Line {i+1}: {s[:60]}'))
+                    break
+            
+            ok += 1
+    
+    # Print report
+    print()
+    print("=" * 60)
+    print(f"  AUDIT: {repo_dir}")
+    print(f"  OK: {ok} files  |  Issues: {len(issues)}  |  Skipped: {skipped}")
+    print("=" * 60)
+    
+    if issues:
+        print()
+        print(f"  {'FILE':50s} {'TYPE':15s} DETAIL")
+        print(f"  {'-'*48} {'-'*15} {'-'*30}")
+        for rel, typ, detail in issues:
+            print(f"  [!] {rel[:48]:48s} {typ:15s} {detail[:60]}")
+        print()
+        print(f"  >>> {len(issues)} issue(s) found. Fix before push. <<<")
+    else:
+        print()
+        print(f"  >>> ALL CLEAN. Ready to push. <<<")
+    
+    return len(issues) == 0
+
+
 def cmd_api(token, method, path, data=None):
     """Raw API call."""
     status, data = api_call(method, path, data=data, token=token)
@@ -352,7 +429,7 @@ def cmd_api(token, method, path, data=None):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="GitHub Publish Automation")
-    parser.add_argument("action", choices=["login", "push", "release", "topics", "api"],
+    parser.add_argument("action", choices=["login", "push", "release", "topics", "api", "audit"],
                        help="Action to perform")
     parser.add_argument("--owner", default="diegin-skill", help="GitHub owner")
     parser.add_argument("--repo", default="diegin", help="Repository name")
@@ -385,6 +462,12 @@ if __name__ == "__main__":
         else:
             cmd_set_topics(args.owner, args.repo, 
                 ["codex", "codex-skill", "ai-agent", "self-evolving", "dgen"])
+    elif args.action == "audit":
+        d = args.dir or REPO_DIR
+        log(f"Auditing: {d}")
+        clean = cmd_audit(d)
+        sys.exit(0 if clean else 1)
+
     elif args.action == "api":
         token = read_token()
         if not token:
