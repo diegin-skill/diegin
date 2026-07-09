@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "diegin"
+version = "3.0.0"
+description = "AI 全域常驻自我迭代进化系统"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Diegin Community"}]
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["engine"]
