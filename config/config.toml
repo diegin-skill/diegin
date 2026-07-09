@@ -1,0 +1,142 @@
+disable_response_storage = true
+model_reasoning_effort = "high"
+model_provider = "keysync"
+review_model = "keysync/codex-default"
+model = "keysync/codex-default"
+sandbox_mode = "danger-full-access"
+personality = "pragmatic"
+
+notify = ['C:\Users\Administrator\AppData\Local\OpenAI\Codex\runtimes\cua_node\1b23c930bdf84ed6\bin\node_modules\@oai\sky\bin\windows\codex-computer-use.exe', "turn-ended", "--previous-notify", '["powershell","-ExecutionPolicy","Bypass","-File","C:\\Users\\Administrator\\plugins\\diegin\\scripts\\diegin_notify_wrapper.ps1","turn-ended"]']
+
+[marketplaces.openai-bundled]
+last_updated = "2026-07-09T05:02:15Z"
+source_type = "local"
+source = '\\?\C:\Users\Administrator\.codex\.tmp\bundled-marketplaces\openai-bundled'
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-07-08T07:12:39Z"
+source_type = "local"
+source = '\\?\C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\plugins\openai-primary-runtime'
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[plugins."diegin@personal"]
+enabled = true
+
+[features]
+hooks = true
+js_repl = false
+memories = true
+
+[mcp_servers.node_repl]
+args = []
+command = 'C:\Users\Administrator\AppData\Local\OpenAI\Codex\runtimes\cua_node\1b23c930bdf84ed6\bin\node_repl.exe'
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = 'C:\Users\Administrator\AppData\Local\OpenAI\Codex\runtimes\cua_node\1b23c930bdf84ed6\bin\node_modules'
+NODE_REPL_NODE_PATH = 'C:\Users\Administrator\AppData\Local\OpenAI\Codex\runtimes\cua_node\1b23c930bdf84ed6\bin\node.exe'
+NODE_REPL_TRUSTED_CODE_PATHS = 'C:\Users\Administrator\.codex'
+CODEX_HOME = 'C:\Users\Administrator\.codex'
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "566be6ef352eb3de899adc56a9cd7b5e46c8f65b00e56b5630dd7a580e10cbea,97669f77b3ca7114a2df05d55646416ea34b28100c07213ef9f643803449ef2f"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.623.141536"
+SKY_CUA_NATIVE_PIPE = "1"
+SKY_CUA_NATIVE_PIPE_DIRECTORY = '\\.\pipe\codex-computer-use-00c5078b-da8c-42b3-97e5-dbd7c482d081'
+CODEX_CLI_PATH = 'C:\Users\Administrator\AppData\Local\OpenAI\Codex\bin\ea1c60319a1dcb19\codex.exe'
+
+[desktop]
+conversationDetailMode = "STEPS_PROSE"
+sansFontSize = 14
+codeFontSize = 13
+ambient-suggestions-enabled = false
+localeOverride = "zh-CN"
+worktree-keep-count = 30
+followUpQueueMode = "steer"
+notifications-turn-mode = "unfocused"
+open-local-url-in-target-preference = "in-app-browser"
+
+[memories]
+generate_memories = true
+use_memories = true
+
+[windows]
+sandbox = "unelevated"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-08\plugin-creator-c-users-administrator-codex-3']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-08\new-chat-2']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-08\new-chat-3']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-08\new-chat-4']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-08\new-chat-5']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-08\new-chat-6']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-08\new-chat-7']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-08\new-chat-8']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-08\new-chat-9']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-09\new-chat']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-09\failed-to-deserialize-the-json-body']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-09\hooks']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-09\hooks-2']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-09\hooks-3']
+trust_level = "trusted"
+
+[projects.'c:\users\administrator\documents\codex\2026-07-09\new-chat-2']
+trust_level = "trusted"
+
+[model_providers.keysync]
+name = "KeySync Bridge"
+wire_api = "responses"
+requires_openai_auth = true
+base_url = "http://127.0.0.1:48731/v1"
+# 迭进·DGEN 钩子系统 — config.toml 内联（用户级）

@@ -1,0 +1,67 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"C:\\Users\\Administrator\\plugins\\diegin\\scripts\\diegin_session_start.ps1\"",
+            "statusMessage": "迭进·DGEN 会话启动注入",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"C:\\Users\\Administrator\\plugins\\diegin\\scripts\\diegin_pre_tool.ps1\"",
+            "statusMessage": "迭进·DGEN 工具预检",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"C:\\Users\\Administrator\\plugins\\diegin\\scripts\\diegin_pre_reply.ps1\"",
+            "statusMessage": "迭进·DGEN 回复注入",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"C:\\Users\\Administrator\\plugins\\diegin\\scripts\\diegin_post_tool.ps1\"",
+            "statusMessage": "迭进·DGEN 工具后效验",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"C:\\Users\\Administrator\\plugins\\diegin\\scripts\\diegin_stop.ps1\"",
+            "statusMessage": "迭进·DGEN 合规报告",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
