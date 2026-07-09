@@ -1,13 +1,13 @@
-[build-system]
+﻿[build-system]
 requires = ["setuptools>=75"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "diegin"
 version = "3.0.0"
-description = "AI 全域常驻自我迭代进化系统"
+description = "AI 鍏ㄥ煙甯搁┗鑷垜杩唬杩涘寲绯荤粺"
 readme = "README.md"
-license = {text = "MIT"}
+license = {text = "Apache-2.0"}
 authors = [{name = "Diegin Community"}]
 requires-python = ">=3.10"
 
