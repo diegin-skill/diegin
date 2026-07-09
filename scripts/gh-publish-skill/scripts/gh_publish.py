@@ -342,55 +342,92 @@ def cmd_login():
 
 
 def cmd_audit(repo_dir):
-    """Audit repo directory for encoding, BOM, garbled text issues."""
+    """Audit repo directory for encoding issues (UTF-8, BOM, mojibake, garbled text)."""
     issues = []
     ok = 0
     skipped = 0
+    
+    # === Mojibake detection config ===
+    # Characters that are STRONG indicators of garbled UTF-8 (Latin-1 misinterpretation)
+    # These appear when UTF-8 bytes are read as Latin-1 then re-encoded
+    STRONG_MOJIBAKE = {
+        0x00c0, 0x00c1, 0x00c2, 0x00c3, 0x00c4, 0x00c5, 0x00c6, 0x00c7,
+        0x00c8, 0x00c9, 0x00ca, 0x00cb, 0x00cc, 0x00cd, 0x00ce, 0x00cf,
+        0x00d0, 0x00d1, 0x00d2, 0x00d3, 0x00d4, 0x00d5, 0x00d6, 0x00d7,
+        0x00d8, 0x00d9, 0x00da, 0x00db, 0x00dc, 0x00dd, 0x00de, 0x00df,
+        0x00e0, 0x00e1, 0x00e2, 0x00e3, 0x00e4, 0x00e5, 0x00e6, 0x00e7,
+        0x00e8, 0x00e9, 0x00ea, 0x00eb, 0x00ec, 0x00ed, 0x00ee, 0x00ef,
+        0x00f0, 0x00f1, 0x00f2, 0x00f3, 0x00f4, 0x00f5, 0x00f6, 0x00f7,
+        0x00f8, 0x00f9, 0x00fa, 0x00fb, 0x00fc, 0x00fd, 0x00fe, 0x00ff,
+        0x00a0, 0x00a1, 0x00a2, 0x00a3, 0x00a4, 0x00a5, 0x00a6, 0x00a7,
+        0x00a8, 0x00a9, 0x00aa, 0x00ab, 0x00ac, 0x00ad, 0x00ae, 0x00af,
+        0x00b0, 0x00b1, 0x00b2, 0x00b3, 0x00b4, 0x00b5, 0x00b6, 0x00b7,
+        0x00b8, 0x00b9, 0x00ba, 0x00bb, 0x00bc, 0x00bd, 0x00be, 0x00bf,
+    }
+    
+    # Characters that are OK even at high frequency in text files
+    SAFE_CHARS = set(range(0x2000, 0x2070)) | {0x2022, 0x2026, 0x2032, 0x2033, 0x25CF, 0x2605}
 
     for root, dirs, files in os.walk(repo_dir):
-        # Skip .git and hidden dirs
-        dirs[:] = [d for d in dirs if not d.startswith('.') and d != '__pycache__']
+        dirs[:] = [d for d in dirs if not d.startswith(".") and d != "__pycache__"]
         for f in sorted(files):
             path = os.path.join(root, f)
             rel = os.path.relpath(path, repo_dir)
             
-            # Skip binary/familiar
             ext = os.path.splitext(f)[1].lower()
-            if ext in ['.pyc', '.exe', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg', '.woff', '.woff2', '.ttf', '.eot']:
+            if ext in [".pyc", ".exe", ".png", ".jpg", ".jpeg", ".gif", ".ico", ".svg", ".woff", ".woff2", ".ttf", ".eot"]:
                 skipped += 1
                 continue
-            if f.startswith('.'):
+            if f.startswith("."):
                 skipped += 1
                 continue
             
-            with open(path, 'rb') as fh:
+            with open(path, "rb") as fh:
                 raw = fh.read()
             
             # 1. UTF-8 validity
             try:
-                text = raw.decode('utf-8')
+                text = raw.decode("utf-8")
             except UnicodeDecodeError:
-                issues.append((rel, 'INVALID_UTF8', 'File is not valid UTF-8'))
+                issues.append((rel, "INVALID_UTF8", "Not valid UTF-8"))
                 continue
             
             # 2. BOM check
-            if raw[:3] == b'\xef\xbb\xbf':
-                issues.append((rel, 'BOM', 'Has UTF-8 BOM'))
+            if raw[:3] == b"\xef\xbb\xbf":
+                issues.append((rel, "BOM", "Has UTF-8 BOM"))
                 continue
             
-            # 3. Replacement chars
-            if '\ufffd' in text:
-                issues.append((rel, 'REPLACEMENT', f'Has {text.count(chr(0xfffd))} replacement characters'))
+            # 3. Replacement characters
+            count_repl = text.count("\ufffd")
+            if count_repl > 0:
+                issues.append((rel, "REPLACEMENT", f"{count_repl}x U+FFFD"))
                 continue
             
-            # 4. Garbled text (excessive ? in short lines)
-            lines = text.split('\n')
+            # 4. Mojibake detection via Unicode analysis
+            non_ascii = [ord(c) for c in text if ord(c) > 127]
+            
+            if len(non_ascii) >= 5:
+                # Count CJK characters
+                cjk = sum(1 for cp in non_ascii if 0x4E00 <= cp <= 0x9FFF or 0x3400 <= cp <= 0x4DBF)
+                # Count strong mojibake indicators
+                moji = sum(1 for cp in non_ascii if cp in STRONG_MOJIBAKE)
+                # Count safe chars
+                safe = sum(1 for cp in non_ascii if cp in SAFE_CHARS)
+                
+                # If mojibake indicators exist AND there are very few CJK chars
+                if moji > 0 and cjk == 0:
+                    issues.append((rel, "MOJIBAKE", 
+                        f"moji={moji} cjk={cjk} non-ascii={len(non_ascii)}"))
+                    continue
+            
+            # 5. Garbled text: excessive "?" in short lines
+            lines = text.split("\n")
             for i, line in enumerate(lines):
                 s = line.strip()
                 if not s or len(s) > 120:
                     continue
-                if s.count('?') > 3:
-                    issues.append((rel, 'GARBLED', f'Line {i+1}: {s[:60]}'))
+                if s.count("?") > 3:
+                    issues.append((rel, "GARBLED", f"L{i+1}: {s[:60]}"))
                     break
             
             ok += 1
@@ -405,7 +442,7 @@ def cmd_audit(repo_dir):
     if issues:
         print()
         print(f"  {'FILE':50s} {'TYPE':15s} DETAIL")
-        print(f"  {'-'*48} {'-'*15} {'-'*30}")
+        print(f"  {'-'*48} {'-'*15} {'-'*40}")
         for rel, typ, detail in issues:
             print(f"  [!] {rel[:48]:48s} {typ:15s} {detail[:60]}")
         print()
@@ -415,7 +452,6 @@ def cmd_audit(repo_dir):
         print(f"  >>> ALL CLEAN. Ready to push. <<<")
     
     return len(issues) == 0
-
 
 def cmd_api(token, method, path, data=None):
     """Raw API call."""
