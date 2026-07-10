@@ -6,8 +6,8 @@ description: |
   使 AI 具备自主纠错、自主强化、自主记忆、自主进化的能力。
   系统级规则覆盖引擎自身保护，领域规则可插拔扩展。
   不绑定任何模型、平台或业务场景。
-author: "悠远"
-repository: "https://github.com/diegin-skill/diegin.git"
+author: "林松"
+repository: "https://github.com/linsong-dev/diegin-skill.git"
 metadata:
   openclaw:
     emoji: "⚡"
@@ -266,6 +266,7 @@ python scripts/dgen_evolve.py   # 初始化健康度基线
 | `rule_word_meaning_confirm` | high | 歧义词先确认再执行 |
 |
 ---
+
 
 
 

@@ -1,4 +1,4 @@
-# diegin·DGEN — AI 全域常驻自我迭代进化系统
+﻿# diegin·DGEN — AI 全域常驻自我迭代进化系统
 
 > 守三攻七 + 一二不过三 + 举一反三 — 让 AI 从每次交互中自我进化
 
@@ -99,7 +99,7 @@ Apache 2.0 — 自由使用、修改、分发（保留版权声明）。
 
 ```powershell
 # 克隆仓库
-git clone https://github.com/diegin-skill/diegin.git
+git clone https://github.com/linsong-dev/diegin-skill.git
 # 或直接复制到 skills 目录
 copy-item -Path S:\diegin-skill -Destination C:\Users\Administrator\.codex\skills\diegin-skill -Recurse -Force
 ```
@@ -117,4 +117,5 @@ Python 3.12+，需要以下包：
 ```powershell
 pip install -r requirements.txt
 ```
+
 
