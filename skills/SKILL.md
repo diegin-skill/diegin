@@ -78,18 +78,26 @@ metadata:
 
 ### 3.1 系统级规则（始终有效）
 
-| 规则 ID | 严重度 | 描述 |
-|:---|:---:|:---|
-| rule_marker_001 | high | 外发消息不含 [DGEN] → 阻断，重新激活迭进 |
-| rule_decorative_marker_001 | high | 有匹配但回复未受影响 → 强化仲裁执行 |
-| rule_empty_context_001 | low | 引擎收到空上下文 → 标记不适用，不阻断 |
-| rule_iron_wall_loop_001 | high | 连续拦截 ≥ 3 次 → 升级通知用户 |
-| rule_subagent_marker_001 | medium | 子会话缺少迭进规则 → 注入迭进任务 |
-| rule_gateway_client_coverage_001 | medium | 外部消息无 [DGEN] → 注入标记 |
-| rule_no_binary_hack_001 | high | 禁止直接修改系统二进制文件 |
-| seed_001 | high | 高风险操作 → 阻断，强制执行风险清单 |
-| seed_002 | high | 成本不透明 → 估算成本并通过 |
-| seed_003 | medium | 规则互斥 → 自动裁决 |
+| 规则 ID | 严重度 | 触发条件 |
+|:---|---:|:---|
+| rule_decorative_marker_001 | high | matched_interceptions > 0 AND reply_unaffected |
+| rule_empty_context_001 | low | diegin_context == {} OR diegin_task_type == '' |
+| rule_gateway_client_coverage_001 | medium | message_source == 'gateway_client' AND not message.content.s |
+| rule_iron_wall_loop_001 | high | diegin_consecutive_blocks >= 3 |
+| rule_marker_001 | high | outbound_message and not outbound_message.startswith('[DGEN' |
+| rule_no_binary_hack_001 | high | task_type == 'binary_modify' AND target == 'app.asar' |
+| rule_subagent_marker_001 | medium | session_type == 'subagent' AND not has_diegin_rule |
+| rule_word_meaning_confirm | high | user_input_contains_ambiguous_word(strip|clear|migrate|clean |
+| rule_scope_full_check | high | task_type == search_or_extract AND scope_not_confirmed |
+| rule_check_before_conclude | medium | output_contains_number_mismatch OR data_source_inconsistency |
+| rule_clean_verify_layered | critical | task_contains_clean_or_remove_or_purge |
+| rule_delivery_full_audit | critical | final_delivery OR report_final_version |
+| rule_powershell_escape_triple_lock | critical | shell_type == powershell AND command_has_special_chars |
+| rule_cmd_test_before_run | high | command_length > 200 OR pipe_nesting > 2 |
+| rule_toolchain_path_verify | high | invoke_external_interpreter |
+| rule_encoding_pre_check | high | file_io_with_non_ascii_content |
+| rule_verify_command_exitcode | critical | external_command_completed |
+| rule_dry_run_before_batch | high | batch_file_operation > 3 |
 
 ### 3.2 如何创建领域规则包
 

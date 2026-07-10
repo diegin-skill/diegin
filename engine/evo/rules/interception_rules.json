@@ -124,14 +124,14 @@
     "lifecycle_status": "active",
     "created_at": "2026-06-20T23:28:50.933427",
     "valid_until": "",
-    "last_triggered": "",
+    "last_triggered": "2026-07-10T12:35:29.640580",
     "boundary_conditions": [
       "空消息不判定拦截"
     ],
     "invalid_conditions": [
       "消息已含[DGEN]标记时放行"
     ],
-    "triggered_count": 0,
+    "triggered_count": 3,
     "ignored_count": 0,
     "override_count": 0,
     "last_ignored": "",
@@ -250,7 +250,7 @@
     "id": "rule_check_before_conclude",
     "trigger_condition": "output_contains_number_mismatch OR data_source_inconsistency",
     "action": "block; cross_validate_multi_source_before_conclusion",
-    "severity": "medium",
+    "severity": "high",
     "tags": [
       "global",
       "logic"

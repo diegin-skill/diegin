@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 diegin-evo 规则引擎
@@ -329,35 +329,121 @@ class RuleEngine:
 
     def _match_condition(self, condition: str, context: Dict[str, Any]) -> bool:
         """
-        匹配条件表达式（简化版）
-        支持: field == value, field > value, field in [list], etc.
+        匹配条件表达式（安全版·无 eval）
+        支持: field == value, field > value, field in [list], startswith(), etc.
         """
         if not condition or condition.strip() == "":
             return True
 
+        cond = condition.strip()
+
+        # ── 快速路径：纯关键词（无运算符、方法调用、逻辑连接词）──
+        ops = ['==', '!=', '>', '<', '>=', '<=', ' and ', ' or ', ' AND ', ' OR ',
+               'startswith', 'contains', 'in ', 'not ', '.startswith(']
+        if not any(op in cond for op in ops):
+            ctx_str = str(context).lower()
+            kw = cond.lower().strip("'\"")
+            return kw in ctx_str
+
+        # ── 安全 AST 评估路径 ──
         try:
-            expr = condition
-            for key, value in context.items():
-                if isinstance(value, str):
-                    expr = expr.replace(f"'{key}'", f"'{value}'")
-                    expr = expr.replace(f'"{key}"', f'"{value}"')
-                    expr = expr.replace(key, f"'{value}'")
-                else:
-                    expr = expr.replace(key, str(value))
-            return eval(expr)
+            return self._safe_evaluate(cond, context)
         except Exception:
-            try:
-                ctx_str = str(context).lower()
-                cond_lower = condition.lower()
-                for word in cond_lower.replace("and", " ").replace("or", " ").replace("not", " ").split():
-                    word = word.strip().strip("'").strip('"').strip("(").strip(")")
-                    if len(word) > 3 and word in ctx_str:
-                        return True
-            except:
-                pass
+            pass
+
+        # ── 回退：模糊关键词匹配 ──
+        try:
+            ctx_str = str(context).lower()
+            cond_lower = cond.lower()
+            for op_word in ['and', 'or', 'not']:
+                cond_lower = cond_lower.replace(f' {op_word} ', ' ')
+            for word in cond_lower.split():
+                word = word.strip().strip("'").strip('"').strip("(").strip(")").strip(",")
+                if len(word) > 3 and word in ctx_str:
+                    return True
+        except Exception:
+            pass
+        return False
+
+    def _safe_evaluate(self, expr: str, context: Dict[str, Any]) -> bool:
+        """基于 AST 的安全布尔表达式求值（完全替代 eval()）"""
+        import ast
+
+        # 标准化逻辑运算符
+        expr = expr.replace(' AND ', ' and ').replace(' OR ', ' or ')
+
+        # 构建变量作用域
+        scope = {}
+        for key, value in context.items():
+            if isinstance(value, str):
+                try:
+                    scope[key] = int(value)
+                except ValueError:
+                    try:
+                        scope[key] = float(value)
+                    except ValueError:
+                        scope[key] = value
+            else:
+                scope[key] = value
+
+        # 为常见布尔标记提供默认值
+        scope.setdefault('has_diegin_rule', False)
+        scope.setdefault('reply_unaffected', False)
+
+        # 解析 AST
+        try:
+            tree = ast.parse(expr, mode='eval')
+        except SyntaxError:
             return False
 
-    # ─── 冲突检测 ───
+        # 裸词转换：将不在作用域中的 Name 节点转为 Constant（字符串）
+        # 避免 NameError 的同时保证安全（AST级操作，无需字符串替换）
+        PYTHON_KEYWORDS = frozenset({'True', 'False', 'None'})
+        scope_keys = set(scope.keys())
+
+        class BareWordToConstant(ast.NodeTransformer):
+            def visit_Name(self, node):
+                if node.id not in PYTHON_KEYWORDS and node.id not in scope_keys:
+                    return ast.Constant(value=node.id)
+                return node
+
+        tree = BareWordToConstant().visit(tree)
+        ast.fix_missing_locations(tree)
+
+        # 允许的安全 AST 节点类型
+        ALLOWED = frozenset({
+            ast.Expression, ast.BoolOp, ast.Compare, ast.Call,
+            ast.Name, ast.Constant, ast.Attribute,
+            ast.Load, ast.Store,
+            ast.Eq, ast.NotEq, ast.Gt, ast.Lt, ast.GtE, ast.LtE,
+            ast.And, ast.Or, ast.Not, ast.UnaryOp, ast.USub,
+            ast.List, ast.Tuple, ast.In, ast.NotIn,
+        })
+
+        for node in ast.walk(tree):
+            if type(node) not in ALLOWED:
+                return False
+
+            if isinstance(node, ast.Call):
+                if not isinstance(node.func, ast.Attribute):
+                    return False
+                if node.func.attr not in {'startswith', 'endswith', 'contains',
+                                            'find', 'count', 'lower', 'upper', 'strip'}:
+                    return False
+
+        # 受限内置函数（仅白名单）
+        safe_builtins = {
+            "True": True, "False": False, "None": None,
+            "int": int, "float": float, "str": str, "bool": bool,
+            "len": len, "isinstance": isinstance,
+        }
+
+        try:
+            code = compile(tree, '<safe_eval>', 'eval')
+            result = eval(code, {"__builtins__": safe_builtins}, scope)
+            return bool(result)
+        except Exception:
+            return False
 
     def detect_conflicts(self, interceptions: List[InterceptionRule],
                          patterns: List[SuccessPattern]) -> List[Dict]:
@@ -443,3 +529,6 @@ def init_rules_if_empty(rule_engine: RuleEngine):
             rule_engine.add_interception(rule)
         rule_engine.save_all()
         print("[OK] 种子规则注入完成，智能体已具备基础生存能力")
+
+
+

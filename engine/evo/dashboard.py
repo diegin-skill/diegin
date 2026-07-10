@@ -28,7 +28,7 @@ class HealthDashboard:
         all_rules = interceptions + patterns
 
         conflict_count = self._count_conflicts()
-        entropy = len(all_rules) / (conflict_count + 1)
+        entropy = round((len(all_rules) + conflict_count) / max(len(set(r.id for r in all_rules)), 1), 3)
 
         snr = self._calculate_snr(interceptions)
         capacity = self._count_scenarios(all_rules)

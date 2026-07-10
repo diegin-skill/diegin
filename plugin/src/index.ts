@@ -5,7 +5,7 @@ const DIEGEN_RULE = `
 ## DGEN ⚡ 迭进预检规则（系统注入·不可跳过）
 
 每次组织回复时执行迭进预检：
-1. 执行迭进引擎预检: cd <!-- 部署时替换为 diegin-skill 实际安装路径，例如: C:/Users/<用户>/.codex/skills/diegin-skill -->/engine && uv run python call_diegin.py check
+1. 执行迭进引擎预检: cd %CODEX_PLUGIN_DIR%/engine && uv run python call_diegin.py check
 2. 解析 JSON 返回值
 3. 如果匹配的拦截规则数(matched_interceptions) > 0 → 检查每条匹配规则的 action 字段
 4. 如果 action 包含 "block_execution" → 回复开头输出: [DGEN] 拦截X | 规则: rule_id | 原因: reason

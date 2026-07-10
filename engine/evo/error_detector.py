@@ -5,7 +5,7 @@
 import os, sys, json, datetime
 
 # 编码乱码特征
-MOJIBAKE_CHARS = set(range(0x00C0, 0x0100)) | set(range(0x00A0, 0x00C0))
+MOJIBAKE_CHARS = set(range(0x0080, 0x00A0)) | set(range(0x2000, 0x2070))
 
 # 失败关键词
 FAIL_GIT = ["connection was reset","connection reset","connection timed out",

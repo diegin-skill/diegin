@@ -1,8 +1,10 @@
-"""
+﻿"""
 迭进 · DGEN 实战调用入口
 迭进引擎入口
 """
 import sys, json, os
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -137,5 +139,6 @@ if __name__ == "__main__":
             "note": "迭进已就绪。使用规则: 守三攻七+一二不过三+三态反馈"
         }
         print(json.dumps(report, ensure_ascii=False, indent=2, default=str))
+
 
 

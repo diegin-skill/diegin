@@ -1,4 +1,4 @@
-"""
+﻿"""
 dgen_pre_check_runner.py
 由 dgen OpenClaw 插件调用的 Python 桥接脚本。
 通过 stdin 接收 JSON（task context），输出 JSON 预检结果到 stdout。
@@ -69,7 +69,7 @@ def main():
         except ImportError:
             pass
 
-        # Fallback resolve if arbitration failed
+        # Fallback resolve (only if primary arbitration returned empty)
         if not arbitration:
             if interceptions:
                 severities = [safe_get(r, "severity", "low") for r in interceptions]
@@ -84,13 +84,6 @@ def main():
             else:
                 action = "allow"
             arbitration = {"decision": action, "display_line": "", "reason": "fallback", "winning_rule_id": None}
-"block" if any(s in ("high", "critical") for s in severities) else "warn"
-            else:
-                action = "allow"
-            if patterns and action != "block":
-                action = "mixed" if interceptions else "allow"
-            arbitration = {"action": action}
-
         # Build safe output (dataclass or dict)
         out_interceptions = []
         for r in interceptions[:5]:
@@ -124,4 +117,6 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
 

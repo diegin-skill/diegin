@@ -119,7 +119,6 @@ class BehaviorTracker:
         
         if rule is None:
             # 第1次：创建拦截规则
-            from rule_engine import InterceptionRule
             new_rule = InterceptionRule(
                 id=key,
                 trigger_condition=error_type,

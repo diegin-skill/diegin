@@ -64,11 +64,11 @@ def run_check():
     market_summary = []
     
     for res in resources:
-        code = pos["code"]
-        name = pos["name"]
-        avg = pos["avgPrice"]
-        sl = pos.get("stopLoss", avg * 0.93)
-        shares = pos.get("shares", 0)
+        code = res["code"]
+        name = res["name"]
+        avg = res["avgPrice"]
+        sl = res.get("stopLoss", avg * 0.93)
+        shares = res.get("shares", 0)
         
         data = get_gtimg_quote(code)
         if not data.get("ok"):
@@ -102,7 +102,7 @@ def run_check():
         earn_season = True  # 7月6日起开启
         earn_warn = False
         if earn_season and pnl_pct > 15:
-            threshold_warn = True  # 数值过高，注意锁定
+            earn_warn = True  # 数值过高，注意锁定
         
         status = "持有"
         if sl_flag:
@@ -140,7 +140,7 @@ def run_check():
     
     ctx = {
         "updatedAt": datetime.now().isoformat(),
-        "resources": resource_snapshots,
+        "resources": pos_snapshots,
         "alerts": alerts,
         "summary": " | ".join(market_summary)
     }
