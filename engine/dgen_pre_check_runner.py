@@ -1,4 +1,4 @@
-﻿"""
+"""
 dgen_pre_check_runner.py
 由 dgen OpenClaw 插件调用的 Python 桥接脚本。
 通过 stdin 接收 JSON（task context），输出 JSON 预检结果到 stdout。

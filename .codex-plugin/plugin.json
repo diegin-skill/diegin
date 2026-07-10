@@ -1,21 +1,21 @@
 {
   "name": "diegin",
-  "version": "3.0.0+codex.20260710023131",
-  "description": "迭进·DGEN — AI 全域常驻自我迭代进化系统。基于'守三攻七+一二不过三+举一反三'元框架",
+  "version": "3.0.0+codex.20260710051409",
+  "description": "\u8fed\u8fdb\u00b7DGEN \u2014 AI \u5168\u57df\u5e38\u9a7b\u81ea\u6211\u8fed\u4ee3\u8fdb\u5316\u7cfb\u7edf\u3002\u57fa\u4e8e'\u5b88\u4e09\u653b\u4e03+\u4e00\u4e8c\u4e0d\u8fc7\u4e09+\u4e3e\u4e00\u53cd\u4e09'\u5143\u6846\u67b6",
   "author": {
     "name": "Local developer"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "迭进·DGEN",
-    "shortDescription": "AI 全域常驻自我迭代进化系统",
-    "longDescription": "迭进（DGEN = Die 迭 + Gin 进）是一个场景无关的 AI 认知进化引擎",
+    "displayName": "\u8fed\u8fdb\u00b7DGEN",
+    "shortDescription": "AI \u5168\u57df\u5e38\u9a7b\u81ea\u6211\u8fed\u4ee3\u8fdb\u5316\u7cfb\u7edf",
+    "longDescription": "\u8fed\u8fdb\uff08DGEN = Die \u8fed + Gin \u8fdb\uff09\u662f\u4e00\u4e2a\u573a\u666f\u65e0\u5173\u7684 AI \u8ba4\u77e5\u8fdb\u5316\u5f15\u64ce",
     "developerName": "Local developer",
     "category": "Productivity",
     "capabilities": [
       "Read"
     ],
-    "defaultPrompt": "使用迭进进行AI自我进化",
+    "defaultPrompt": "\u4f7f\u7528\u8fed\u8fdb\u8fdb\u884cAI\u81ea\u6211\u8fdb\u5316",
     "brandColor": "#1a1a2e"
   }
 }

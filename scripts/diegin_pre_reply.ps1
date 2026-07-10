@@ -1,45 +1,51 @@
-﻿# 迭进·DGEN UserPromptSubmit 钩子 - AI 回复前注入迭进预检 + 调用引擎
-# 这是"不可绕过"的全局覆盖
+# ???DGEN UserPromptSubmit ?? - AI ???????????
+# UserPromptSubmit = ?????????AI?????
 
-$dieginHome = "C:\Users\Administrator\.codex"
 $pluginRoot = "C:\Users\Administrator\plugins\diegin"
-$auditLog = Join-Path $dieginHome "diegin_audit.log"
+$auditLog = Join-Path $pluginRoot "diegin_audit.log"
 $pythonExe = Join-Path $pluginRoot ".venv\Scripts\python.exe"
 $enginePy = Join-Path $pluginRoot "engine\call_diegin.py"
 $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss.fff"
 
-# 记录钩子被触发
 try { "$time [HOOK:UserPromptSubmit] FIRED" | Add-Content -Path $auditLog -ErrorAction SilentlyContinue } catch {}
 
-# 调用 Python 引擎（使用 stdin 模式，不依赖临时文件）
-$dgenOutput = "[DGEN] ✅ 迭进规则生效中"
+$dgenOutput = "[DGEN] ? ???????"
+
 try {
     if (Test-Path $pythonExe) {
-        # 构造简单上下文 JSON
+
+        # ?? Step 1: ????? ??
         $ctxJson = '{"message":"hook","session_id":"dgen"}'
         $checkOutput = $ctxJson | & $pythonExe $enginePy check 2>&1
         if ($LASTEXITCODE -eq 0) {
-            $dgenOutput = "[DGEN] ✅ 迭进预检通过"
+            $dgenOutput = "[DGEN] ? ??????"
             try { "$time [HOOK:DGEN-CHECK] OK" | Add-Content -Path $auditLog -ErrorAction SilentlyContinue } catch {}
         } else {
-            $dgenOutput = "[DGEN] ✅ 迭进规则生效中"
             try { "$time [HOOK:DGEN-CHECK] ERR exit=$LASTEXITCODE" | Add-Content -Path $auditLog -ErrorAction SilentlyContinue } catch {}
         }
+
+        # ?? Step 2: ??????? + ????????????????????? ??
+        $postCtx = '{"hook":"pre_reply","task_type":"auto_sandwich"}'
+        $null = Start-Job -ScriptBlock {
+            param($py, $engine, $ctx)
+            $null = $ctx | & $py $engine sandwich_auto 2>&1
+            $null = $ctx | & $py $engine generalize_auto 2>&1
+        } -ArgumentList $pythonExe, $enginePy, $postCtx
     }
 } catch {
     try { "$time [HOOK:DGEN-CHECK] EXCEPTION | $_" | Add-Content -Path $auditLog -ErrorAction SilentlyContinue } catch {}
 }
 
-# 输出注入内容
+# ??????
 @"
 $dgenOutput
 
-## DGEN ⚡ 迭进预检规则（系统注入·不可跳过）
+## DGEN ? ?????????????????
 
-每次组织回复时执行迭进预检：
-- 守三攻七：回复前自我拆解找不足 + 提炼成功模式
-- 一二不过三：同类错误第3次通知用户
-- 举一反三：从当前场景推导跨域通用规则
-- 每次回复开头必须输出 [DGEN] 标记
+??????????????
+- ??????????????? + ??????
+- ???????????3?????
+- ??????????????????
+- ?????????? [DGEN] ??
 "@
 exit 0

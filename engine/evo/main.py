@@ -843,6 +843,81 @@ def generalize_rule(new_rule_id: str = None) -> list:
         }
 
 
+        # [????] ????????????????????????10???critical/high?
+        _auto_written = []
+        _high_sev = {"critical", "high"}
+        
+        # ??????????????? 30 ?????????
+        try:
+            old_auto = [r for r in engine.get_interceptions(active_only=False) if r.source == "auto_generalized"]
+            if len(old_auto) >= 30:
+                old_auto.sort(key=lambda r: getattr(r, "created_at", "") or "")
+                to_remove = old_auto[:-20]  # ????? 20 ?
+                for r in to_remove:
+                    try:
+                        engine.delete_interception(r.id)
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+        
+        for c in unique_candidates:
+            if len(_auto_written) >= 10:
+                break
+            # ?????
+            sev = c.get("target_severity", None)
+            if sev is None and "missing_severity" in c:
+                sev_list = c["missing_severity"]
+                sev = sev_list[0] if sev_list else "medium"
+            if sev is None:
+                sev = "medium"
+            # ?? critical/high
+            if str(sev) not in _high_sev:
+                continue
+            try:
+                from rule_engine import InterceptionRule
+                import datetime as dt
+                target_cat = c.get("target_cat", "general")
+                source_id = c.get("source", "auto")
+                rid = f"gen_{source_id[:20]}_{target_cat[:15]}_{dt.datetime.now().strftime('%H%M%S%f')[:10]}"
+                existing = engine.get_interception_by_id(rid)
+                if not existing:
+                    # Determine severity
+                    sev = c.get("target_severity", None)
+                    if sev is None and "missing_severity" in c:
+                        sev_list = c["missing_severity"]
+                        sev = sev_list[0] if sev_list else "medium"
+                    if sev is None:
+                        sev = "medium"
+                    # Determine trigger condition
+                    trig = c.get("suggested_condition", c.get("source", "auto"))
+                    # Determine action
+                    act = c.get("suggested_action", "check_and_auto_resolve")
+                    new_rule = InterceptionRule(
+                        id=rid,
+                        trigger_condition=str(trig),
+                        action=str(act),
+                        severity=str(sev),
+                        tags=["auto_generalized", target_cat],
+                        logic_score=3.0, outcome_score=3.0, confidence=3.0,
+                        source="auto_generalized",
+                        lifecycle_status="cached",
+                        created_at=dt.datetime.now().isoformat(),
+                    )
+                    engine.add_interception(new_rule)
+                    _auto_written.append(rid)
+            except Exception:
+                pass
+
+        if _auto_written:
+            try:
+                engine.save_all()
+                _last_generalization_check["auto_written"] = _auto_written
+                print(f"[DGEN:AUTO] ???????? {len(_auto_written)} ???")
+            except Exception:
+                pass
+
+
         return unique_candidates
 
 
