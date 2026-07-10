@@ -1,4 +1,4 @@
-﻿$dieginHome = "C:\Users\Administrator\.codex"
+$dieginHome = "C:\Users\Administrator\.codex"
 $auditLog = Join-Path $dieginHome "diegin_audit.log"
 $reportFile = Join-Path $dieginHome "diegen_compliance.json"
 $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss.fff"

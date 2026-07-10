@@ -1,4 +1,4 @@
-﻿# 迭进·DGEN Notify 强制执行 - 由 Codex OS级通知机制触发，AI无法绕过
+# 迭进·DGEN Notify 强制执行 - 由 Codex OS级通知机制触发，AI无法绕过
 $dieginHome = "C:\Users\Administrator\.codex"
 $auditLog = Join-Path $dieginHome "diegin_audit.log"
 $stateFile = Join-Path $dieginHome "diegin_state.json"

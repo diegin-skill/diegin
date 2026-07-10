@@ -1,4 +1,4 @@
-﻿# 迭进·DGEN SessionStart 钩子 - 会话启动/恢复时初始化迭进状态
+# 迭进·DGEN SessionStart 钩子 - 会话启动/恢复时初始化迭进状态
 # 由 Codex 运行时自动触发，AI 无法绕过
 
 $dieginHome = "C:\Users\Administrator\.codex"

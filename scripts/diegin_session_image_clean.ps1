@@ -1,4 +1,4 @@
-﻿# 迭进·DGEN 会话图片保护脚本
+# 迭进·DGEN 会话图片保护脚本
 # 由 PostToolUse 钩子触发，自动清理 Keysync 不兼容的 input_image 格式
 # 不依赖代理，独立运行
 

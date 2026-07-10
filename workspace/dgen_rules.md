@@ -415,3 +415,31 @@ ule_tool_selection_fastest |
 | rule_plugin_ui_display_requirements | high | ?? UI ? marketplace ?? + ???? | 2026-07-10 |
 | rule_windows_bom_audit | high | ????????3?? | 2026-07-10 |
 | pat_use_plugin_creator_first_001 | ?? | ????????? | 2026-07-10 |
+
+## [NEW] 2026-07-10 编码安全规则
+
+### 18. 全文件 UTF8 NoBOM 编码规则
+
+**场景：** PowerShell Set-Content / Out-File 默认写入 UTF16-LE 或 UTF8 BOM，
+导致 Python/JSON 解析器崩溃、AI 上下文注入乱码、hooks 中文变 ???。
+该问题已在 diegin 中发生 **无数次**，涉及 hooks 脚本、config 文件、skills 等全部模块。
+
+| 字段 | 值 |
+|:---|:---|
+| 规则ID | ule_encoding_no_bom_utf8 |
+| 严重度 | critical |
+| 触发条件 | 任何文件写入操作（.ps1/.py/.json/.md/.toml） |
+| 行为 | 必须用 [System.IO.File]::WriteAllText(path, content, [System.Text.UTF8Encoding]::new(False)) 或 -Encoding UTF8NoBOM；禁止使用 Out-File / Set-Content 无编码参数 |
+| 来源 | 2026-07-10 无数次编码损坏事件 |
+
+### 19. 部署前编码三遍审计
+
+**场景：** 每次部署/升级前必须验证所有文本文件编码
+
+| 字段 | 值 |
+|:---|:---|
+| 规则ID | ule_pre_deploy_encoding_audit |
+| 严重度 | critical |
+| 触发条件 | 部署/同步/升级前 |
+| 行为 | ① 扫描所有 .ps1/.py/.json/.md/.toml → ② 检查 BOM（前3字节 EF BB BF）→ ③ 检查 U+FFFD 替换字符 → ④ 有问题的写入失败清单，全部修复后才能部署 |
+| 来源 | 2026-07-10 迭进部署审计"
