@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.codex\\diegin\\hooks\\diegin_session_start.ps1\"",
+            "command": "powershell -ExecutionPolicy Bypass -File \"C:\Users\Administrator\\.codex\\diegin\\hooks\\diegin_session_start.ps1\"",
             "statusMessage": "Diegin SessionStart",
             "timeout": 30
           }
@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.codex\\diegin\\hooks\\diegin_pre_tool.ps1\"",
+            "command": "powershell -ExecutionPolicy Bypass -File \"C:\Users\Administrator\\.codex\\diegin\\hooks\\diegin_pre_tool.ps1\"",
             "statusMessage": "Diegin PreToolUse",
             "timeout": 30
           }
@@ -31,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.codex\\diegin\\hooks\\diegin_pre_reply.ps1\"",
+            "command": "powershell -ExecutionPolicy Bypass -File \"C:\Users\Administrator\\.codex\\diegin\\hooks\\diegin_pre_reply.ps1\"",
             "statusMessage": "Diegin UserPromptInject",
             "timeout": 60
           }
@@ -44,7 +44,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.codex\\diegin\\hooks\\diegin_post_tool.ps1\"",
+            "command": "powershell -ExecutionPolicy Bypass -File \"C:\Users\Administrator\\.codex\\diegin\\hooks\\diegin_post_tool.ps1\"",
             "statusMessage": "Diegin PostToolUse",
             "timeout": 30
           }
@@ -56,7 +56,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.codex\\diegin\\hooks\\diegin_stop.ps1\"",
+            "command": "powershell -ExecutionPolicy Bypass -File \"C:\Users\Administrator\\.codex\\diegin\\hooks\\diegin_stop.ps1\"",
             "statusMessage": "Diegin StopReport",
             "timeout": 30
           }
