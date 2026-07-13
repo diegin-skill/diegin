@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "powershell -ExecutionPolicy Bypass -File \"$env:USERPROFILE\\.codex\\diegin\\hooks\\diegin_session_start.ps1\"",
-            "statusMessage": "Diegin SessionStart",
+            "statusMessage": "⚡ DGEN SessionStart",
             "timeout": 30
           }
         ]
@@ -20,7 +20,7 @@
           {
             "type": "command",
             "command": "powershell -ExecutionPolicy Bypass -File \"$env:USERPROFILE\\.codex\\diegin\\hooks\\diegin_pre_tool.ps1\"",
-            "statusMessage": "Diegin PreToolUse",
+            "statusMessage": "⚡ DGEN PreToolUse",
             "timeout": 30
           }
         ]
@@ -32,7 +32,7 @@
           {
             "type": "command",
             "command": "powershell -ExecutionPolicy Bypass -File \"$env:USERPROFILE\\.codex\\diegin\\hooks\\diegin_pre_reply.ps1\"",
-            "statusMessage": "Diegin UserPromptInject",
+            "statusMessage": "⚡ DGEN PreReply+Review",
             "timeout": 60
           }
         ]
@@ -45,7 +45,7 @@
           {
             "type": "command",
             "command": "powershell -ExecutionPolicy Bypass -File \"$env:USERPROFILE\\.codex\\diegin\\hooks\\diegin_post_tool.ps1\"",
-            "statusMessage": "Diegin PostToolUse",
+            "statusMessage": "⚡ DGEN PostToolUse",
             "timeout": 30
           }
         ]
@@ -57,7 +57,7 @@
           {
             "type": "command",
             "command": "powershell -ExecutionPolicy Bypass -File \"$env:USERPROFILE\\.codex\\diegin\\hooks\\diegin_stop.ps1\"",
-            "statusMessage": "Diegin StopReport",
+            "statusMessage": "⚡ DGEN StopReport",
             "timeout": 30
           }
         ]
